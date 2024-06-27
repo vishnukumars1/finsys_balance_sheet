@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinsYs</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    #table1 {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #table1 th, #table1 td {
+    border: 1px solid #dddddd;
+    padding: 5px 2px;
+    /* text-align: left; */
+    }
+
+    #table1 th {
+    background-color: #f2f2f2;
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    .invoice_data {
+        font-size: 1.2rem;
+    }
+
+    .data_row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .data_1, .data_2 {
+        font-weight: bold;
+    }
+
+    .data_value {
+        flex: 1;
+        text-align: right;
+    }
+
+    .balance_info{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+    .balance_info .bal_head{
+        width: 48%;
+    }
+
+    .bal_value{
+        width: 48%;
+        flex: 1;
+        text-align: right;
+    }
+
+
+    .hidden {
+        display: none;
+    }
+
+    
+
+</style>
+
+<body>
+    <div class="my-5 page" size="A4">
+        <div class="p-5">
+            <div id="ember2512" class="row tooltip-container ember-view text-ellipsis" style="display: flex; justify-content: space-between;">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <center style="color: black;">
+                        <p> {{cmp.Company_name}}</p>
+                        <b>
+                            <p style="font-size: 1.3rem;">HORIZONTAL PROFIT & LOSS A/C</p>
+                        </b>
+                    </center>
+                    {% if start_date and end_date %}
+                    <center class="h6 text-white">{{start_date}} TO {{end_date}}</center>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="row px-1 py-1">
+                    <div class="col-12">
+
+                        <section class="product-area mt-2">
+                            <table class="table table-responsive-md mt-4 table-hover"
+                                id="reportTable"  id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">PARTICULARS </th>
+                                        <th class="text-center">AMOUNT</th>
+                                        <th class="text-center">AMOUNT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3" style="font-weight: 600;font-size: large;">
+                                            Trading Account :
+                                        </td>
+                                    </tr>
+
+                                    <tr class="parent-row" style="font-weight: 600;opacity: 0.8;">
+                                        <td>SALES ACCOUNT</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
+                                      
+                                    </tr>
+                                    
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td >SALES</td>
+                                        <td class="text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                       
+                                    </tr>
+                                    
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td >SALES BILLS TO MAKE</td>
+                                        <td class="text-center">{{ i.opening_stock }}</td>
+                                        <td class="text-center"></td>
+                                       
+                                    </tr>
+
+                                    <tr class="parent-row" style="font-weight: 600;opacity: 0.8;">
+
+                                        <td>COST OF SALES</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ total_cost_of_sales|default:0|floatformat:2 }}</td>
+
+                                    </tr>
+
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>OPENING STOCK</td>
+                                        <td class="text-center">{{ total_opening_stock|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>ADD: Purchase Accounts</td>
+                                        <td class="text-center">{{ total_purchase_account|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>LESS: Closing Stock</td>
+                                        <td class="text-center">{{ total_closing_stock|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    
+                                    {% if total_sales_account < total_cost_of_sales %}
+                                    <tr style="font-weight: 600;font-size: larger;">
+                                        <td >GROSS LOSS</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ difference|default:0|floatformat:2 }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr style="font-weight: 600;font-size: larger;">
+                                        <td>GROSS PROFIT</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ difference|default:0|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endif %}
+
+                                    <tr>
+                                        <td colspan="3" style="font-weight: 600;font-size: large;">
+                                            Income Statement:
+                                        </td>
+                                    </tr>
+
+                                    <tr class="parent-row" style="font-weight: 600;opacity: 0.8;">
+
+                                        <td>INDIRECT INCOMES</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ total_indirect_income|default:0|floatformat:2 }}</td>
+
+                                    </tr>
+
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>DISCOUNT RECEIVED</td>
+                                        <td class="text-center">{{ total_indirect_income|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>INTEREST RECEIVED</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>LOADING UNLOADING</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td class="text-center">--</td>
+                                        <td class="text-center">--</td>
+                                        <td class="text-center" style="font-weight: 600;font-size: large;">{{ total|default:0|floatformat:2 }}</td>
+                                    </tr>
+
+                                    <tr class="parent-row" style="font-weight: 600;opacity: 0.8;">
+
+                                        <td>INDIRECT EXPENSES</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ total_expenses|default:0|floatformat:2 }}</td>
+
+                                    </tr>
+
+                                    {% for e in indirect_expenses %}
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>{{ e.expense_account }}</td>
+                                        <td class="text-center">{{ e.amount }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                        <td>DISCOUNT PAID</td>
+                                        <td class="text-center">{{ total_discount_paid|default:0|floatformat:2 }}</td>
+                                        <td class="text-center"></td>
+                                    </tr>
+
+                                    {% if total < total_expenses %}
+                                    <tr style="font-weight: 600;font-size: larger;">
+                                        <td>NET LOSS</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ net_difference|default:0|floatformat:2 }}</td>
+                                    </tr>
+                                    {% else %}
+                                    <tr style="font-weight: 600;font-size: larger;">
+                                        <td>NET PROFIT</td>
+                                        <td class="text-center"></td>
+                                        <td class="text-center">{{ net_difference|default:0|floatformat:2 }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    
+
+                                </tbody>
+
+
+                            </table>
+
+                            
+                        </section>
+            
+                        
+                    </div>
+                        
+                </div>
+
+            <hr>
+           
+                                   
+       
+        </div>
+    </div>
+</body>
+
+</html>

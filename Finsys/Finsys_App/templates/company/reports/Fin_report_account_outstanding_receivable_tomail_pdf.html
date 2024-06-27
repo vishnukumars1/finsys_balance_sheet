@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinsYs</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    #table1 {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #table1 th, #table1 td {
+    border: 1px solid #dddddd;
+    padding: 5px 2px;
+    /* text-align: left; */
+    }
+
+    #table1 th {
+    background-color: #f2f2f2;
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    .invoice_data {
+        font-size: 1.2rem;
+    }
+
+    .data_row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .data_1, .data_2 {
+        font-weight: bold;
+    }
+
+    .data_value {
+        flex: 1;
+        text-align: right;
+    }
+
+    .balance_info{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+    .balance_info .bal_head{
+        width: 48%;
+    }
+
+    .bal_value{
+        width: 48%;
+        flex: 1;
+        text-align: right;
+    }
+
+    #reportTable th {
+    border: 1px solid rgb(194, 194, 194);
+    padding: 5px 2px;
+    color: #000;
+    }
+    #reportTable td{
+        color: black;
+    }
+
+
+
+</style>
+
+<body>
+    <div class="my-5 page" size="A4">
+        <div class="p-5">
+            <div id="ember2512" class="row tooltip-container ember-view text-ellipsis" style="display: flex; justify-content: space-between;">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <center style="color: black;">
+                        <p> {{cmp.Company_name}}</p>
+                        <b>
+                            <p style="font-size: 1.3rem;">OUTSTANDING PAYABLES</p>
+                        </b>
+                    </center>
+                    {% if start_date and end_date %}
+                    <center class="h6 text-white">{{start_date}} TO {{end_date}}</center>
+                    {% endif %}
+                </div>
+                <hr>
+            <section class="mt-4">
+                <table class="table table-responsive-md mt-4 table-hover" id="reportTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">CUSTOMER NAME</th>
+                            <th class="text-center">PENDING AMOUNT</th>
+                            <th class="text-center">PENDING BILLS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <style>
+                            .my_border{
+                                border: 1px solid rgb(172, 172, 172);
+                            }
+                            .my_sub_border{
+                                border: 1px solid rgb(172, 172, 172);
+                                border-top: 0px;
+                                border-bottom: 0px;
+                            }
+                            .bl{
+                                border-left: 1px solid rgb(172, 172, 172);
+                            }
+                            .br{
+                                border-right: 1px solid rgb(172, 172, 172);
+                            }
+                            .bt{
+                                border-top: 1px solid rgb(172, 172, 172);
+                            }
+                            .bb{
+                                border-bottom: 1px solid rgb(172, 172, 172);
+                            }
+                        </style>
+                        {% for i in all_data %}
+                        <tr onclick="call_unhide_submodule(`{{ i.vendor_name }}{{ i.id }}`)" {% if forloop.last %}style="border-top:1px red black"{% else %}{% endif %}>
+                            <td class="my_border text-center p-1">{{i.customer_name}}</td>
+                            <td class="my_border text-center p-1">{{i.tot_balance}}</td>
+                            <td class="my_border text-center p-1">{{i.total_count}}</td>
+                        </tr>
+                            {% for j in i.sub_module  %}
+                            <tr style="display: none;" class="{{ i.vendor_name }}{{ i.id }}sub_mod my_top_border ">
+                                <td class="p-0 text-center text-danger bl {% if forloop.last %}  bb{% endif %}"><i><span class="pe-2">{{ j.object_module }}</span> - <span class="ps-5"><strong>{{ j.object_balance }}</strong></span></i></td>
+                                <td class="p-0 text-center text-danger {% if forloop.last %}  bb{% endif %}"></td>
+                                <td class="p-0 text-center text-danger br {% if forloop.last %} br bb{% endif %}"><i>{{ j.object_count }}</i></td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if not all_data %}
+                <center><h4 class="text-dark">No data available.!</h4></center>
+                {% endif %}
+            </section>
+            <hr>
+            <section class="balance-info text-dark">
+                <div class="row p-4">
+                    <div class="col-10">
+                        <div class="row mb-2">
+                            <div class="col-4">Total Customers : <p style="font-size: 19px;">{{customers_count|default:0}}</p>
+                            </div><br><br>
+                        </div>
+                        <!-- <div class="row ">
+                           
+                            <div class="col-2" >
+                                <h5 style=" color: #000; font-weight: bold;">Total Amount:</h5> 
+                                <h4 class="text-dark" id="expense"  style="font-weight: 600;">Rs.<span id="totalCreditnote">{{totalinv|default:0|floatformat:2}}</span></h4></div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-4 "></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                        </div> -->
+    
+                    </div>
+                    <div class="col-2 text-center">
+                        <h5 style="padding-top: 80px; color: #000; font-weight: bold;">Total Balance:</h5>
+                        <h4 class="text-dark" style="font-weight: 600;" id="totvalue">Rs.<span id="superTotal">{{grand_tot_balance|default:0|floatformat:2}}</span></h4>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>

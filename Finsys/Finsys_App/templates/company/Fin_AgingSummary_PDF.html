@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinsYs</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    #table1 {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    #table1 th, #table1 td {
+    border: 1px solid #dddddd;
+    padding: 5px 2px;
+    /* text-align: left; */
+    }
+
+    #table1 th {
+    background-color: #f2f2f2;
+    }
+
+    body {
+        font-size: 14px;
+    }
+
+    .invoice_data {
+        font-size: 1.2rem;
+    }
+
+    .data_row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .data_1, .data_2 {
+        font-weight: bold;
+    }
+
+    .data_value {
+        flex: 1;
+        text-align: right;
+    }
+
+    .balance_info{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
+    .balance_info .bal_head{
+        width: 48%;
+    }
+
+    .bal_value{
+        width: 48%;
+        flex: 1;
+        text-align: right;
+    }
+</style>
+
+<body>
+    <div class="my-5 page" size="A4">
+        <div class="p-5">
+            <div id="ember2512" class="row tooltip-container ember-view text-ellipsis" style="display: flex; justify-content: space-between;">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <center style="color: black;">
+                        <p> {{cmp.Company_name}}</p>
+                        <b>
+                            <p style="font-size: 1.3rem;">AGING SUMMARY</p>
+                        </b>
+                    </center>
+                    {% if startDate and endDate %}
+                    <center class="h6 text-white">{{startDate}} TO {{endDate}}</center>
+                    {% endif %}
+                </div>
+                <hr>
+            <section class="mt-4">
+                <table class="table2" id="table1">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; text-transform:uppercase;">CUSTOMER NAME</th>
+                            <th style="text-align: center; text-transform:uppercase;">DUE ON RECEIPT</th>
+                            {% for i in interval_data %}
+                            <th style="text-align: center; text-transform:uppercase;">{{i}}</th>
+                            {% endfor %}
+                            <th style="text-align: center; text-transform:uppercase;">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in reportData %}
+                        <tr>
+                            <td style="text-align: center;">{{i.custfname}} {{i.custlname}}</td>
+                            <td style="text-align: center;">
+                                {% if i.current > 0 %}
+                                    {% if show_by == 'inv_amt' %}
+                                        Rs. {{i.current}}
+                                    {% else %}
+                                        {{i.current}}
+                                    {% endif %}
+                                {% else %}
+                                    {% if show_by == 'inv_amt' %}
+                                        Rs. 0
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% for day in i.day_matrix %}
+                            <td style="text-align: center;">
+                                {% if show_by == 'inv_amt' %}
+                                    Rs. {{day}}
+                                {% else %}
+                                    {{day}}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                            <td style="text-align: center;">
+                                {% if show_by == 'inv_amt' %}
+                                    Rs. {{i.total_balance}}
+                                {% else %}
+                                    {{i.total_balance}}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center;">
+                                <span style="font-weight: bold;">Total</span>
+                            </td>
+                            <td style="text-align: center;">
+                                {% if show_by == 'inv_amt' %}
+                                    <span style="font-weight: 600;">Rs. {{total_current|default:0|floatformat:2}}</span>
+                                {% else %}
+                                <span style="font-weight: 600;">{{total_current}}</span>
+                                {% endif %}
+                            </td>
+                            {% for m in total_matrix %}
+                            <td style="text-align: center;">
+                                {% if show_by == 'inv_amt' %}
+                                <span style="font-weight: 600;">Rs. {{m|default:0|floatformat:2}}</span>
+                                {% else %}
+                                <span style="font-weight: 600;">{{m}}</span>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                            <td style="text-align: center;">
+                                {% if show_by == 'inv_amt' %}
+                                <span style="font-weight: 600;">Rs. {{final_balance|default:0|floatformat:2}}</span>
+                                {% else %}
+                                <span style="font-weight: 600;">{{final_balance|default:0}}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <hr>
+            <section style="margin-top: 1rem; display: flex; justify-content: right;">
+                <div style="margin-left: 1rem;">Total Customers : <p style="font-size: 19px; margin-top: 3px;">{{cust_no|default:0}}</p>
+                <div class="margin-left: 1rem;">
+                    <h5 style="padding-top: 10px; color: #000; font-size: 17px;">Total</h5>
+                    <h4 style="font-size: 20px; font-weight: bold; margin-top: 5px;" id="totvalue">
+                        {% if show_by == 'inv_amt' %}
+                            Rs. <span id="superTotal">{{final_balance|default:0|floatformat:2}}</span>
+                        {% else %}
+                            <span id="superTotal">{{final_balance|default:0}}</span>
+                        {% endif %}
+                    </h4>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>

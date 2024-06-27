@@ -1,0 +1,337 @@
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>FinsYs</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+    <style>
+        #table1 {
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        #table1 th, #table1 td {
+        border: 1px solid #dddddd;
+        padding: 5px 2px;
+        /* text-align: left; */
+        }
+
+        #table1 th {
+        background-color: #f2f2f2;
+        }
+
+        body {
+            font-size: 14px;
+        }
+
+        .invoice_data {
+            font-size: 1.2rem;
+        }
+
+        .data_row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .data_1, .data_2 {
+            font-weight: bold;
+        }
+
+        .data_value {
+            flex: 1;
+            text-align: right;
+        }
+
+        .balance_info{
+            display: flex;
+            justify-content: start;
+            align-items: center;
+        }
+        .balance_info .bal_head{
+            width: 48%;
+        }
+
+        .bal_value{
+            width: 48%;
+            flex: 1;
+            text-align: right;
+        }
+
+
+        .hidden {
+            display: none;
+        }
+
+        .expanded-row {
+            background-color: #f0f0f0;
+            /* Background color for expanded row */
+        }
+
+        .hidden-row {
+            display: none;
+            /* Hide the expanded rows by default */
+        }
+
+        .table-container {
+            display: flex;
+        }
+
+        .table-container table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+
+        .table-container th,
+        .table-container td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table-container th {
+            background-color: #f2f2f2;
+        }
+
+        .table-container tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .table-container tr:hover {
+            background-color: #ddd;
+        }
+
+        .hidden-row {
+            display: none;
+        }
+
+        .hidden-row.visible {
+            display: table-row;
+        }
+
+        .expandable-content-one td {
+            display: none;
+        }
+
+        .expandable-content-one.visible td:nth-child(-n+3) {
+            display: table-cell;
+        }
+
+        .expandable-content-two td {
+            display: none;
+        }
+
+        .expandable-content-two.visible td:nth-child(-n+3) {
+            display: table-cell;
+        }
+
+
+    </style>
+
+    <body>
+        <div class="my-5 page" size="A4">
+            <div class="p-5">
+                <div id="ember2512" class="row tooltip-container ember-view text-ellipsis" style="display: flex; justify-content: space-between;">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <center style="color: black;">
+                            <p> {{cmp.Company_name}}</p>
+                            <b>
+                                <p style="font-size: 1.3rem;">PROFIT & LOSS A/C</p>
+                            </b>
+                        </center>
+                        {% if start_date and end_date %}
+                        <center class="h6 text-white">{{start_date}} TO {{end_date}}</center>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <div class="row px-1 py-1">
+                        <div class="col-12">
+                            <section class="product-area mt-2">
+                    <div class="table-container">
+                        <table id="table1" id="reportTable" class="table-hover text-dark">
+                            <tr style="font-size: medium;">
+                                <th class="text-center">PARTICULAR</th>
+                                <th class="text-center">AMOUNT</th>
+                                <th class="text-center">AMOUNT</th>
+                            </tr>
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-one">OPENING STOCK</td>
+                                <td class="expandable-one"></td>
+                                <td class="expandable-one text-center">{{ total_opening_stock|default:0|floatformat:2 }}</td>
+                            </tr>
+
+                            {% for i in opening_stock %}
+                            <tr class="hidden-row expandable-content-one" style="opacity: 0.7;font-size: small;">
+                                <td>{{ i.name }}</td>
+                                <td class="text-center">{{ i.opening_stock }}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-one">PURCHASE ACCOUNTS</td>
+                                <td class="expandable-one"></td>
+                                <td class="expandable-one text-center">{{ total_purchase_account|default:0|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-one" style="opacity: 0.7;font-size: small;">
+                                <td>PURCHASE</td>
+                                <td class="text-center">{{ total_purchase_account|default:0|floatformat:2 }}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-one" style="opacity: 0.7;font-size: small;">
+                                <td>PURCHASE BILL TO COME</td>
+                                <td class="text-center"></td>
+                                <td></td>
+                            </tr>
+
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-one">INDIRECT EXPENSES</td>
+                                <td class="expandable-one"></td>
+                                <td class="expandable-one text-center">{{ total_expenses|default:0|floatformat:2 }}</td>
+                            </tr>
+                            {% for e in indirect_expenses %}
+                            <tr class="hidden-row expandable-content-one" style="opacity: 0.7;font-size: small;">
+                                <td>{{ e.expense_account }}</td>
+                                <td class="text-center">{{ e.amount }}</td>
+                                <td></td>
+                            </tr>
+                            {% endfor %}
+                            <tr class="hidden-row expandable-content-one" style="opacity: 0.7;font-size: small;">
+                                <td>DISCOUNT PAID</td>
+                                <td class="text-center">{{ total_discount_paid|default:0|floatformat:2 }}</td>
+                                <td></td>
+                            </tr>
+
+                            {% if total_profit < total_loss %}
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td>NET PROFIT</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{ difference }}</td>
+                            </tr>
+                            {% else %}
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="text-center">--</td>
+                                <td class="text-center">--</td>
+                                <td class="text-center">--</td>
+                            </tr>
+                            {% endif %}
+
+                            <tr style="font-weight: 600;font-size: x-large;">
+                                <td >Total</td>
+                                <td class="text-center"></td>
+                                {% if total_profit > total_loss %}
+                                <td class="text-center">{{ total_profit|default:0|floatformat:2 }}</td>
+                                {% elif total_loss > total_profit%}
+                                <td class="text-center">{{ total_loss|default:0|floatformat:2 }}</td>
+                                {% else %}
+                                <td class="text-center">{{ total_profit|default:0|floatformat:2 }}</td>
+                                {% endif %}
+                            </tr>
+
+                            <!-- Add more rows as needed -->
+                        </table>
+                        <table id="table2" id="reportTable" class="table-hover text-dark">
+                            <tr style="font-size: medium;">
+                                <th class="text-center">PARTICULAR</th>
+                                <th class="text-center">AMOUNT</th>
+                                <th class="text-center">AMOUNT</th>
+                            </tr>
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-two">SALES ACCOUNT</td>
+                                <td class="expandable-two"></td>
+                                <td class="expandable-two text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>SALES</td>
+                                <td class="text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>SALES BILLS TO MAKE</td>
+                                <td class="text-center"></td>
+                                <td></td>
+                            </tr>
+
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-two">INDIRECT INCOMES</td>
+                                <td class="expandable-two"></td>
+                                <td class="expandable-two text-center">{{ total_indirect_income|default:0|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>DISCOUNT RECEIVED</td>
+                                <td class="text-center">{{ total_indirect_income|default:0|floatformat:2 }}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>INTEREST RECEIVED</td>
+                                <td class="text-center"></td>
+                                <td></td>
+                            </tr>
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>LOADING UNLOADING</td>
+                                <td class="text-center"></td>
+                                <td></td>
+                            </tr>
+
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="expandable-two">CLOSING STOCK</td>
+                                <td class="expandable-two"></td>
+                                <td class="expandable-two text-center">{{ total_closing_stock|default:0|floatformat:2 }}</td>
+                            </tr>
+                            {% for c in closing_stock %}
+                            <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                                <td>{{ c.name }}</td>
+                                <td class="text-center">{{ c.current_stock }}</td>
+                                <td class="text-center"></td>
+                            </tr>
+                            {% endfor %}
+                            {% if total_loss < total_profit %}
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td >NET LOSS</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">{{difference|default:0|floatformat:2}}</td>
+                            </tr>
+                            {% else %}
+                            <tr style="font-weight: 600;font-size: medium;">
+                                <td class="text-center">--</td>
+                                <td class="text-center">--</td>
+                                <td class="text-center">--</td>
+                            </tr>
+                            {% endif %}
+
+                            <tr style="font-weight: 600;font-size: x-large;">
+                                <td >Total</td>
+                                <td class="text-center"></td>
+                                {% if total_loss > total_profit %}
+                                <td class="text-center">{{total_loss|default:0|floatformat:2}}</td>
+                                {% elif total_profit > total_loss %}
+                                <td class="text-center">{{total_profit|default:0|floatformat:2}}</td>
+                                {% else %}
+                                <td class="text-center">{{total_loss|default:0|floatformat:2}}</td>
+                                {% endif %}
+                            </tr>
+                            <!-- Add more rows as needed -->
+                        </table>
+                    </div>
+                    </section>
+                    </div>
+                    </div>
+
+                <hr>
+            
+                                    
+        
+            </div>
+        </div>
+    </body>
+
+    </html>
