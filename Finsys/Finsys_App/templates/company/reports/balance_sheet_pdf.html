@@ -221,6 +221,15 @@
                             <td class="text-center">{{ total_sundry_creditors|default:0|floatformat:2 }}</td>
                             <td></td>
                         </tr>
+                        {% for s in sundry_creditors %}
+                        <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                            
+                            <td>{{ s.first_name}} {{ s.last_name }}</td>
+                            <td class="text-center">{{ s.current_balance }}</td>
+                            <td></td>
+                            
+                        </tr>
+                        {% endfor %}
 
                         <tr style="font-weight: 600;font-size: medium;">
                             {% if total_current_asset > total_liability %}
@@ -259,7 +268,7 @@
                             <td class="expandable-two text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
                         </tr>
                         <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
-                            <td>CUMPUTER</td>
+                            <td>COMPUTER</td>
                             <td class="text-center">{{ total_sales_account|default:0|floatformat:2 }}</td>
                             <td></td>
                         </tr>
@@ -295,26 +304,53 @@
                             <td class="expandable-two"></td>
                             <td class="expandable-two text-center">{{ total_current_asset|default:0|floatformat:2 }}</td>
                         </tr>
-                        <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
-                            <td>OPENING STOCK</td>
-                            <td class="text-center">{{ c.current_stock }}</td>
-                            <td class="text-center"></td>
-                        </tr>
-                        <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
-                            <td>DEPOSITS(ASSETS)</td>
-                            <td class="text-center">{{ c.current_stock }}</td>
-                            <td class="text-center"></td>
-                        </tr>
+                        
+
                         <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
                             <td>LOANS & ADVANCES (ASSETS)</td>
                             <td class="text-center">{{ total_loan_advance|default:0|floatformat:2 }}</td>
                             <td class="text-center"></td>
                         </tr>
                         <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                            <td>CASH-IN-HAND</td>
+                            <td class="text-center">{{ total_cashinhand|default:0|floatformat:2 }}</td>
+                            <td class="text-center"></td>
+                        </tr>
+                        <tr class="hidden-row expandable-content-two" style="opacity: 0.7;font-size: small;">
+                            <td>BANK ACCOUNTS</td>
+                            <td class="text-center">{{ total_bank_account|default:0|floatformat:2 }}</td>
+                            <td class="text-center"></td>
+                        </tr>
+                        <tr class="hidden-row expandable-content-two parent-row" style="opacity: 0.7;font-size: small;">
+                            <td>CLOSING STOCK</td>
+                            <td class="text-center">{{ total_closing_stock|default:0|floatformat:2 }}</td>
+                            <td class="text-center"></td>
+                        </tr>
+                        {% for d in closing_stock %}
+                        <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                            
+                            <td>{{ d.name}}</td>
+                            <td class="text-center">{{ d.current_stock }}</td>
+                            <td></td>
+                            
+                        </tr>
+                        {% endfor %}
+
+                        <tr class="hidden-row expandable-content-two parent-row" style="opacity: 0.7;font-size: small;">
                             <td>SUNDRY DEBITORS</td>
                             <td class="text-center">{{ total_sundry_debitors|default:0|floatformat:2 }}</td>
                             <td class="text-center"></td>
                         </tr>
+                        {% for d in sundry_debitors %}
+                        <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                            
+                            <td>{{ d.first_name}} {{ d.last_name }}</td>
+                            <td class="text-center">{{ d.current_balance }}</td>
+                            <td></td>
+                            
+                        </tr>
+                        {% endfor %}
+
 
                         <tr style="font-weight: 600;font-size: medium;">
                             {% if total_liability > total_current_asset %}
