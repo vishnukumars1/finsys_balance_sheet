@@ -755,10 +755,21 @@
                   <li><a href="{% url 'Fin_cashFlowReport' %}"><i class="bx bx-right-arrow-alt"></i>Cash Flow</a></li>
                   <li><a href="{% url 'Fin_dayBookReport' %}"><i class="bx bx-right-arrow-alt"></i>Day Book</a></li>
                   <li><a href="{% url 'Fin_trial_balance' %}"><i class="bx bx-right-arrow-alt"></i>Trial Balance</a></li>
-                  <li><a href="{% url 'fin_profitloss' %}"><i class="bx bx-right-arrow-alt"></i>Horizontal Profit and Loss</a></li>
-                  <li><a href="{% url 'horizontal_profitloss' %}"><i class="bx bx-right-arrow-alt"></i>Vertical Profit and Loss</a></li>
-                  <li><a href="{% url 'balancesheet' %}"><i class="bx bx-right-arrow-alt"></i>Horizontal Balance Sheet</a></li>
-                  <li><a href="{% url 'vertical_balance_sheet' %}"><i class="bx bx-right-arrow-alt"></i>Vertical Balance Sheet</a></li>
+                  <li id="profit">
+                    <a><i class="bx bx-right-arrow-alt"></i>Profit & loss </a>
+                    <ul class="px-4">
+                      <li><a href="{% url 'fin_profitloss' %}"><i class="bx bx-right-arrow-alt"></i>Horizontal Profit and Loss</a></li>
+                      <li><a href="{% url 'horizontal_profitloss' %}"><i class="bx bx-right-arrow-alt"></i>Vertical Profit and Loss</a></li>
+                      
+                    </ul>
+                  </li>
+                  <li id="balance">
+                    <a><i class="bx bx-right-arrow-alt"></i>Balance Sheet</a>
+                    <ul class="px-4">
+                      <li><a href="{% url 'balancesheet' %}"><i class="bx bx-right-arrow-alt"></i>Horizontal Balance Sheet</a></li>
+                      <li><a href="{% url 'vertical_balance_sheet' %}"><i class="bx bx-right-arrow-alt"></i>Vertical Balance Sheet</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
               <li id="stock">

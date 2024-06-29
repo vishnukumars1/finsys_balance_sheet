@@ -399,7 +399,7 @@
                                         <td></td>
                                     </tr>
                                     {% for s in sundry_creditors %}
-                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;background-color: #00000048;">
                                         
                                         <td>{{ s.first_name}} {{ s.last_name }}</td>
                                         <td class="text-center">{{ s.current_balance }}</td>
@@ -504,7 +504,7 @@
                                         <td class="text-center"></td>
                                     </tr>
                                     {% for d in closing_stock %}
-                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                    <tr class="hidden-row child-row" style="opacity: 0.7;font-size: small;background-color: #00000048;">
                                         
                                         <td>{{ d.name}}</td>
                                         <td class="text-center">{{ d.current_stock }}</td>
@@ -519,7 +519,7 @@
                                         <td class="text-center"></td>
                                     </tr>
                                     {% for d in sundry_debitors %}
-                                    <tr class="hidden child-row" style="opacity: 0.7;font-size: small;">
+                                    <tr class="hidden-row child-row" style="opacity: 0.7;font-size: small;background-color: #00000048;">
                                         
                                         <td>{{ d.first_name}} {{ d.last_name }}</td>
                                         <td class="text-center">{{ d.current_balance }}</td>
@@ -803,6 +803,7 @@
             tables.forEach(table => {
                 table.addEventListener('click', function (event) {
                     const target = event.target;
+                    console.log(target.classList)
                     if (target.classList.contains('expandable-one')) {
                         const row = target.parentElement;
                         let nextRow = row.nextElementSibling;
@@ -814,28 +815,41 @@
                         }
                     }else if(target.classList.contains('expandable-two')) {
                       const row = target.parentElement;
+            
 
                       let nextRow = row.nextElementSibling;
 
                         while (nextRow && nextRow.classList.contains('expandable-content-two')) {
-                            nextRow.classList.toggle('visible');
+                            
+                            
+                                nextRow.classList.toggle('visible');
                             nextRow = nextRow.nextElementSibling;
-                            if (nextRow.classList.contains('child-row')){
+                            while (nextRow.classList.contains('child-row')){
+                                if(nextRow.classList.contains('visible')){
+                                nextRow.classList.toggle('visible');
+
+                                }
+                                
                                 nextRow = nextRow.nextElementSibling;
+                            
                             }
+                            
                         }
                     }
                 });
             });
         });
 
+        
+
                                // Add event listener to each parent row
                                document.querySelectorAll('.parent-row').forEach(row => {
         row.addEventListener('click', function() {
             // Toggle visibility of all next rows with class 'child-row'
             let nextRows = this.nextElementSibling;
+            console.log(nextRows.classList)
             while (nextRows && nextRows.classList.contains('child-row')) {
-                nextRows.classList.toggle('hidden');
+                nextRows.classList.toggle('visible');
                 nextRows = nextRows.nextElementSibling;
             }
         });
